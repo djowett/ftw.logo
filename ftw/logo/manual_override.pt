@@ -8,13 +8,19 @@
     <metal:block fill-slot="main">
       <metal:block use-macro="context/@@ploneform-macros/form" >
         <metal:field-slot fill-slot="field">
-          <metal:field use-macro="context/@@ploneform-macros/field">
-          </metal:field>
-          <div tal:define="widgetname python:widget.name.split('.')[-1];
-                          scale_name python:widgetname.replace('_', '/', 1);"
-              tal:attributes="data-scale-name scale_name">
-              <img tal:attributes="src string:/ftw_logo/@@logo/${scale_name}" />
-          </div>
+          <table>
+            <tr>
+              <td tal:define="widgetname python:widget.name.split('.')[-1];
+                              scale_name python:widgetname.replace('_', '/', 1);"
+                  class="zcml-image">
+                <img tal:attributes="src string:/ftw_logo/@@logo/${scale_name}" />
+              </td>
+              <td class="dexterity-override">
+                <metal:field use-macro="context/@@ploneform-macros/field">
+                </metal:field>
+              </td>
+            </tr>
+          </table>
         </metal:field-slot>
       </metal:block>
     </metal:block>
