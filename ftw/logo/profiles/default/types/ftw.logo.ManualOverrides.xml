@@ -43,8 +43,7 @@
   <property name="klass">plone.dexterity.content.Item</property>
 
   <!-- Dexterity behaviours for this type -->
-  <property name="behaviors">
-    <element value="plone.app.content.interfaces.INameFromTitle"/>
+  <property name="behaviors" purge="True">
   </property>
 
   <!-- If defined by a schema interface, dotted name of schema class -->
