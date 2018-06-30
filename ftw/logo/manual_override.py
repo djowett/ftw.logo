@@ -4,8 +4,6 @@ from plone.namedfile.field import NamedBlobImage
 from plone.supermodel import model
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from zope import schema
-from zope.container.interfaces import INameChooser
-from zope.interface import implements
 
 from ftw.logo import _
 
@@ -97,16 +95,3 @@ class AddManualOverrideForm(add.DefaultAddForm):
 
 class AddManualOverrideView(add.DefaultAddView):
     form = AddManualOverrideForm
-
-class SingletonNameChooser(object):
-    """ Always chooses the same ID for an item"""
-    implements(INameChooser)
-
-    def __init__(self, context):
-        pass
-
-    def chooseName(self, name, object):
-        return u"newid"
-
-    def checkName(self, name, object):
-        return True

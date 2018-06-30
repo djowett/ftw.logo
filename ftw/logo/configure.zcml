@@ -73,10 +73,4 @@
       class=".manual_override.EditManualOverrideForm"
       permission="cmf.ModifyPortalContent" />
 
-    <adapter
-      for="plone.app.layout.navigation.interfaces.INavigationRoot"
-      factory=".manual_override.SingletonNameChooser"
-      provides="zope.container.interfaces.INameChooser"
-      />
-
 </configure>
