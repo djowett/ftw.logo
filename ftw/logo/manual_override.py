@@ -70,6 +70,33 @@ class IManualOverrides(model.Schema):
         required=False,
     )
 
+from Products.Five.browser import BrowserView
+from plone import api
+from plone.dexterity.utils import createContentInContainer
+from plone.protect.auto import safeWrite
+from plone.protect.utils import addTokenToUrl
+
+class CreateOverridesIfReqdForm(BrowserView):
+    """
+    Create IManualOverrides if it does not exist and redirect to it's edit form
+    """
+    def __call__(self):
+        navroot = self.context
+        override_item_name = 'ftw-logo-overrides'
+        overridesItem = navroot.get(override_item_name, None)
+        import pdb; pdb.set_trace()
+        if overridesItem is None:
+            safeWrite(navroot, self.request)
+
+            res = createContentInContainer(navroot, 'ftw.logo.ManualOverrides', title=override_item_name)
+
+        edit_url = addTokenToUrl('{}/{}/@@edit'.format(
+            self.context.absolute_url_path(),
+            override_item_name
+        ))
+        self.request.response.redirect(edit_url)
+        return ""
+
 
 class EditManualOverrideForm(edit.DefaultEditForm):
     label = _(u"Edit Manual Logo and Icon Overrides")
