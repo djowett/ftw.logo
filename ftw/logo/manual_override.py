@@ -1,8 +1,13 @@
+from plone import api
 from plone.dexterity.browser import add, edit
 from plone.formwidget.namedfile import NamedImageFieldWidget
 from plone.namedfile.field import NamedBlobImage
+from plone.protect.auto import safeWrite
+from plone.protect.utils import addTokenToUrl
 from plone.supermodel import model
+from Products.Five.browser import BrowserView
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
+import transaction
 from zope import schema
 
 from ftw.logo import _
@@ -70,11 +75,6 @@ class IManualOverrides(model.Schema):
         required=False,
     )
 
-from Products.Five.browser import BrowserView
-from plone import api
-from plone.dexterity.utils import createContentInContainer
-from plone.protect.auto import safeWrite
-from plone.protect.utils import addTokenToUrl
 
 class CreateOverridesIfReqdForm(BrowserView):
     """
@@ -82,19 +82,24 @@ class CreateOverridesIfReqdForm(BrowserView):
     """
     def __call__(self):
         navroot = self.context
-        override_item_name = 'ftw-logo-overrides'
-        overridesItem = navroot.get(override_item_name, None)
-        import pdb; pdb.set_trace()
+        override_item_id = 'ftw-logo-overrides'
+        overridesItem = navroot.get(override_item_id, None)
         if overridesItem is None:
             safeWrite(navroot, self.request)
 
-            res = createContentInContainer(navroot, 'ftw.logo.ManualOverrides', title=override_item_name)
+            new_obj = api.content.create(
+                type='ftw.logo.ManualOverrides',
+                title='Logo and Icon Content',
+                id=override_item_id,
+                safe_id=True,
+                container=navroot
+            )
+            transaction.get().commit()
 
-        edit_url = addTokenToUrl('{}/{}/@@edit'.format(
-            self.context.absolute_url_path(),
-            override_item_name
+        self.request.response.redirect('{}/{}/@@edit'.format(
+            navroot.absolute_url_path(),
+            override_item_id
         ))
-        self.request.response.redirect(edit_url)
         return ""
 
 
